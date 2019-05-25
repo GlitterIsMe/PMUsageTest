@@ -23,5 +23,5 @@ endif()
 link_directories(${LIBPMEM_LIBRARY_DIRS})
 
 add_executable(pmemtest main.cpp)
-target_include_directories(array PUBLIC ${LIBPMEM_INCLUDE_DIRS} . ..)
-target_link_libraries(array ${LIBPMEM_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
+target_include_directories(pmemtest PUBLIC ${LIBPMEM_INCLUDE_DIRS} . ..)
+target_link_libraries(pmemtest ${LIBPMEM_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
