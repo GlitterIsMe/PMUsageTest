@@ -4,7 +4,7 @@
 #include <memory.h>
 
 using std::string;
-const string FADAX_PATH = "/home/czl/pmem/map_file";
+const string FADAX_PATH = "/home/czl/pmem0/map_file";
 const uint64_t FILE_SIZE = 50 << 30;
 
 const string DEVDAX_PATH = "/dev/dax1.0";
@@ -15,7 +15,7 @@ int main() {
     int is_pmem;
     char* map_addr = static_cast<char*>(pmem_map_file(FADAX_PATH.c_str(), FILE_SIZE, PMEM_FILE_CREATE, 0666, &mapped_len, &is_pmem));
     if(map_addr == NULL){
-        printf("map error");
+        printf("map error\n");
         exit(-1);
     }
     char arbitrary_data[1048576];
@@ -30,7 +30,7 @@ int main() {
         // finish 1GB data
         FILE *fp = popen("free -m", "r");
         if(!fp){
-            printf("system call failed");
+            printf("system call failed\n");
             exit(-1);
         }
         char buf[100];
