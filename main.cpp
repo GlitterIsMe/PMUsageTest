@@ -5,7 +5,7 @@
 
 using std::string;
 const string FADAX_PATH = "/home/czl/pmem0/map_file";
-const uint64_t FILE_SIZE = 50 << 30;
+const uint64_t FILE_SIZE = 50 * (1ull << 30);
 
 const string DEVDAX_PATH = "/dev/dax1.0";
 const uint64_t DEV_SIZE = 133175443456;
