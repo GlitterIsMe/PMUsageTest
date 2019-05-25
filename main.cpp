@@ -2,8 +2,10 @@
 #include <libpmem.h>
 #include <string>
 #include <memory.h>
+#include <chrono>
 
-using std::string;
+using namespace std;
+using namespace chrono;
 const string FADAX_PATH = "/home/czl/pmem0/map_file";
 const uint64_t FILE_SIZE = 50 * (1ull << 30);
 
@@ -22,6 +24,8 @@ int main() {
     char arbitrary_data[1048576];
     memset(arbitrary_data, 0, 1048576);//1MB
     uint64_t write_pos = 0;
+
+    auto start = system_clock::now();
     for(int i = 0; i < 45; i++){
         for(int j = 0; j < 1024; j++){
             //memcpy(map_addr + write_pos, arbitrary_data, 1048576);
@@ -45,6 +49,10 @@ int main() {
         printf("mem res %d\n", mem_size);
 
     }
+    auto end = system_clock::now();
+    auto duration = duration_cast<microseconds>(end - start);
+    auto sec = static_cast<double>(duration.count()) * microseconds::period::num / microseconds::period::den;
+    printf("throughput is %f\n", 45 * 1024 / sec);
     pmem_unmap(map_addr, mapped_len);
     return 0;
 }
