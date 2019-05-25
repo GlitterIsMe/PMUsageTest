@@ -13,7 +13,7 @@ const uint64_t DEV_SIZE = 133175443456;
 int main() {
     size_t mapped_len;
     int is_pmem;
-    char* map_addr = pmem_map_file(FADAX_PATH, FILE_SIZE, PMEM_FILE_CREATE, 0666, &mapped_len, &is_pmem);
+    char* map_addr = static_cast<char*>(pmem_map_file(FADAX_PATH.c_str(), FILE_SIZE, PMEM_FILE_CREATE, 0666, &mapped_len, &is_pmem));
     if(map_addr == NULL){
         printf("map error");
         exit(-1);
