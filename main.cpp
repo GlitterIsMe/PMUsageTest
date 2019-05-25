@@ -15,8 +15,8 @@ const uint64_t DEV_SIZE = 133175443456;
 int main() {
     size_t mapped_len;
     int is_pmem;
-    //char* map_addr = static_cast<char*>(pmem_map_file(FADAX_PATH.c_str(), FILE_SIZE, PMEM_FILE_CREATE, 0666, &mapped_len, &is_pmem));
-    char* map_addr = static_cast<char*>(pmem_map_file(DEVDAX_PATH.c_str(), DEV_SIZE, PMEM_FILE_CREATE, 0666, &mapped_len, &is_pmem));
+    char* map_addr = static_cast<char*>(pmem_map_file(FADAX_PATH.c_str(), FILE_SIZE, PMEM_FILE_CREATE, 0666, &mapped_len, &is_pmem));
+    //char* map_addr = static_cast<char*>(pmem_map_file(DEVDAX_PATH.c_str(), DEV_SIZE, PMEM_FILE_CREATE, 0666, &mapped_len, &is_pmem));
     if(map_addr == NULL){
         printf("map error\n");
         exit(-1);
@@ -29,9 +29,9 @@ int main() {
     const int GB_NUM = 45;
     for(int i = 0; i < GB_NUM; i++){
         for(int j = 0; j < 1024; j++){
-            //memcpy(map_addr + write_pos, arbitrary_data, 1048576);
-            //pmem_msync(map_addr + write_pos, 1048576);
-            pmem_memcpy_persist(map_addr, arbitrary_data, 1048576);
+            memcpy(map_addr + write_pos, arbitrary_data, 1048576);
+            pmem_msync(map_addr + write_pos, 1048576);
+            //pmem_memcpy_persist(map_addr, arbitrary_data, 1048576);
             write_pos += 1048576;
         }
         // finish 1GB data
@@ -53,7 +53,7 @@ int main() {
     auto end = system_clock::now();
     auto duration = duration_cast<microseconds>(end - start);
     auto sec = static_cast<double>(duration.count()) * microseconds::period::num / microseconds::period::den;
-    printf("throughput is %f\n", GB_NUM * 1024 / sec);
+    printf("throughput is %f MB/s\n", GB_NUM * 1024 / sec);
     pmem_unmap(map_addr, mapped_len);
     return 0;
 }
