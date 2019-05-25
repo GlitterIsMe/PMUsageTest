@@ -26,7 +26,8 @@ int main() {
     uint64_t write_pos = 0;
 
     auto start = system_clock::now();
-    for(int i = 0; i < 45; i++){
+    const int GB_NUM = 45;
+    for(int i = 0; i < GB_NUM; i++){
         for(int j = 0; j < 1024; j++){
             //memcpy(map_addr + write_pos, arbitrary_data, 1048576);
             //pmem_msync(map_addr + write_pos, 1048576);
@@ -52,7 +53,7 @@ int main() {
     auto end = system_clock::now();
     auto duration = duration_cast<microseconds>(end - start);
     auto sec = static_cast<double>(duration.count()) * microseconds::period::num / microseconds::period::den;
-    printf("throughput is %f\n", 45 * 1024 / sec);
+    printf("throughput is %f\n", GB_NUM * 1024 / sec);
     pmem_unmap(map_addr, mapped_len);
     return 0;
 }
