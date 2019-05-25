@@ -24,8 +24,9 @@ int main() {
     uint64_t write_pos = 0;
     for(int i = 0; i < 45; i++){
         for(int j = 0; j < 1024; j++){
-            memcpy(map_addr + write_pos, arbitrary_data, 1048576);
-            pmem_msync(map_addr + write_pos, 1048576);
+            //memcpy(map_addr + write_pos, arbitrary_data, 1048576);
+            //pmem_msync(map_addr + write_pos, 1048576);
+            pmem_memcpy_persist(map_addr, arbitrary_data, 1048576);
             write_pos += 1048576;
         }
         // finish 1GB data
