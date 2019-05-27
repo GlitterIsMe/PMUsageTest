@@ -22,9 +22,9 @@ int main() {
         exit(-1);
     }
     if(is_pmem){
-        printf("is_pmem");
+        printf("is_pmem\n");
     }else{
-        printf("is not pmem");
+        printf("is not pmem\n");
     };
     char arbitrary_data[1048576];
     memset(arbitrary_data, 0, 1048576);//1MB
