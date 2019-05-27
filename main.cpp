@@ -21,6 +21,11 @@ int main() {
         printf("map error\n");
         exit(-1);
     }
+    if(is_pmem){
+        printf("is_pmem");
+    }else{
+        printf("is not pmem");
+    };
     char arbitrary_data[1048576];
     memset(arbitrary_data, 0, 1048576);//1MB
     uint64_t write_pos = 0;
@@ -29,9 +34,12 @@ int main() {
     const int GB_NUM = 45;
     for(int i = 0; i < GB_NUM; i++){
         for(int j = 0; j < 1024; j++){
-            //memcpy(map_addr + write_pos, arbitrary_data, 1048576);
-            //pmem_msync(map_addr + write_pos, 1048576);
-            pmem_memcpy_persist(map_addr, arbitrary_data, 1048576);
+            if(is_pmem){
+                pmem_memcpy_persist(map_addr, arbitrary_data, 1048576);
+            }else{
+                memcpy(map_addr + write_pos, arbitrary_data, 1048576);
+                pmem_msync(map_addr + write_pos, 1048576);
+            };
             write_pos += 1048576;
         }
         // finish 1GB data
