@@ -1,11 +1,15 @@
 #include <iostream>
-#include <libpmem.h>
+//#include <libpmem.h>
 #include <string>
 #include <memory.h>
 #include <chrono>
+#include "libpmemobj++/pool.hpp"
+#include "libpmemobj++/make_persistent_atomic.hpp"
+#include "libpmemobj++/persistent_ptr.hpp"
 
 using namespace std;
 using namespace chrono;
+using namespace pmem::obj;
 const string FADAX_PATH = "/home/czl/pmem0/map_file";
 const uint64_t FILE_SIZE = 50 * (1ull << 30);
 
