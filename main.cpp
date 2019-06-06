@@ -3,6 +3,7 @@
 #include <string>
 #include <memory.h>
 #include <chrono>
+#include <iomanip>
 #include "libpmemobj++/pool.hpp"
 #include "libpmemobj++/make_persistent_atomic.hpp"
 #include "libpmemobj++/persistent_ptr.hpp"
@@ -19,8 +20,8 @@ const uint64_t DEV_SIZE = 133175443456;
 int main() {
     size_t mapped_len;
     int is_pmem;
-    //char* map_addr = static_cast<char*>(pmem_map_file(FADAX_PATH.c_str(), FILE_SIZE, PMEM_FILE_CREATE, 0666, &mapped_len, &is_pmem));
-    char* map_addr = static_cast<char*>(pmem_map_file(DEVDAX_PATH.c_str(), DEV_SIZE, PMEM_FILE_CREATE, 0666, &mapped_len, &is_pmem));
+    char* map_addr = static_cast<char*>(pmem_map_file(FADAX_PATH.c_str(), FILE_SIZE, PMEM_FILE_CREATE, 0666, &mapped_len, &is_pmem));
+    //char* map_addr = static_cast<char*>(pmem_map_file(DEVDAX_PATH.c_str(), DEV_SIZE, PMEM_FILE_CREATE, 0666, &mapped_len, &is_pmem));
     if(map_addr == NULL){
         printf("map error\n");
         exit(-1);
@@ -31,15 +32,20 @@ int main() {
         printf("is not pmem\n");
     };
     char arbitrary_data[1048576];
-    memset(arbitrary_data, 0, 1048576);//1MB
+    memset(arbitrary_data, 0, 1048576);//1KB
     uint64_t write_pos = 0;
 
     auto start = system_clock::now();
-    const int GB_NUM = 45;
+    const int GB_NUM = 20;
     for(int i = 0; i < GB_NUM; i++){
         for(int j = 0; j < 1024; j++){
             if(is_pmem){
-                pmem_memcpy_persist(map_addr, arbitrary_data, 1048576);
+                auto start_write = chrono::high_resolution_clock::now();
+                pmem_memcpy_persist(map_addr + write_pos, arbitrary_data, 1048576);
+                auto end_write = chrono::high_resolution_clock::now();
+                chrono::duration<double, std::nano> diff = end_write - start_write;
+                cout<<fixed<<setprecision(5)
+                    <<"write 1KB use "<<diff.count()<<" nanos\n";
             }else{
                 memcpy(map_addr + write_pos, arbitrary_data, 1048576);
                 pmem_msync(map_addr + write_pos, 1048576);
