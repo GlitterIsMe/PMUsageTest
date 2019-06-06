@@ -53,7 +53,7 @@ int main() {
             write_pos += 1048576;
         }
         // finish 1GB data
-        FILE *fp = popen("free -m", "r");
+        /*FILE *fp = popen("free -m", "r");
         if(!fp){
             printf("system call failed\n");
             exit(-1);
@@ -65,7 +65,7 @@ int main() {
         size_t pos = res.find(":");
         string res2 = res.substr(pos + 1, res.size());
         int mem_size = std::stoi(res2);
-        printf("mem res %d\n", mem_size);
+        printf("mem res %d\n", mem_size);*/
 
     }
     auto end = system_clock::now();
